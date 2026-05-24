@@ -1,0 +1,160 @@
+:root {
+  --bg: #0f1115;
+  --card: #181b22;
+  --line: #2a2f3a;
+  --fg: #e7e9ee;
+  --muted: #8b93a3;
+  --accent: #6aa1ff;
+  --ok: #4fd18b;
+  --run: #ffce5a;
+  --err: #ff6b6b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans KR", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+header {
+  padding: 24px 20px 8px;
+  text-align: center;
+}
+header h1 { margin: 0; font-size: 1.6rem; }
+header .sub { margin: 4px 0 0; color: var(--muted); font-size: 0.85rem; }
+
+main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 16px 20px 60px;
+  display: grid;
+  gap: 18px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+.card h2 { margin: 0 0 14px; font-size: 1.1rem; }
+.card h3 { margin: 16px 0 8px; font-size: 0.95rem; }
+
+fieldset {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin: 0 0 14px;
+  padding: 12px 14px 14px;
+}
+legend { color: var(--accent); font-size: 0.8rem; padding: 0 6px; }
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+label small { color: #6b7280; font-weight: 400; }
+
+input, select, textarea {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 10px;
+  background: #0f1218;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--fg);
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+textarea { resize: vertical; }
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0 12px;
+}
+.row.checks { grid-template-columns: 1fr 1fr; align-items: center; }
+label.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--fg);
+}
+label.check input { width: auto; margin: 0; }
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent);
+  color: #08101f;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.hint { color: var(--muted); font-size: 0.8rem; text-align: center; margin: 10px 0 0; }
+.muted { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
+
+/* 단계 진행바 */
+#stages { list-style: none; margin: 0; padding: 0; }
+#stages li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+#stages li:last-child { border-bottom: none; }
+.dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: #3a3f4b; flex: 0 0 auto;
+}
+.dot.running { background: var(--run); animation: pulse 1s infinite; }
+.dot.done { background: var(--ok); }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+video { width: 100%; border-radius: 10px; background: #000; }
+
+#log-box { margin-top: 14px; }
+#log-box summary { cursor: pointer; color: var(--muted); font-size: 0.85rem; }
+pre#log {
+  max-height: 260px; overflow: auto;
+  background: #0b0d12; border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px; font-size: 0.78rem; color: #b9c0cf; white-space: pre-wrap;
+}
+
+.error {
+  color: var(--err);
+  background: rgba(255,107,107,0.08);
+  border: 1px solid rgba(255,107,107,0.3);
+  border-radius: 8px;
+  padding: 10px;
+  white-space: pre-wrap;
+  font-size: 0.8rem;
+}
+
+.job-list { list-style: none; margin: 0; padding: 0; }
+.job-list li {
+  display: flex; justify-content: space-between; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid var(--line);
+  font-size: 0.85rem; cursor: pointer;
+}
+.job-list li:last-child { border-bottom: none; }
+.job-list li:hover { color: var(--accent); }
+.badge {
+  font-size: 0.72rem; padding: 2px 8px; border-radius: 20px; flex: 0 0 auto;
+}
+.badge.queued { background: #2a2f3a; color: var(--muted); }
+.badge.running { background: rgba(255,206,90,0.15); color: var(--run); }
+.badge.done { background: rgba(79,209,139,0.15); color: var(--ok); }
+.badge.error { background: rgba(255,107,107,0.15); color: var(--err); }
+a { color: var(--accent); }

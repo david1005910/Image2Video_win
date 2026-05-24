@@ -1,0 +1,5 @@
+# 웹앱 전용 의존성 (파이프라인 의존성은 img2vid conda env에 이미 설치돼 있다고 가정:
+#   torch / diffusers / transformers / accelerate / imageio / requests / pillow ...)
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image → Video 파이프라인</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>🎬 Image → Video 파이프라인</h1>
+    <p class="sub">Pollinations · Wan 2.2 I2V · RIFE/FFmpeg · Real-ESRGAN</p>
+  </header>
+
+  <main>
+    <!-- ===== 설정 폼 ===== -->
+    <section class="card" id="form-card">
+      <h2>설정</h2>
+      <form id="job-form">
+        <fieldset>
+          <legend>이미지</legend>
+          <label>이미지 프롬프트
+            <textarea id="image_prompt" rows="3"></textarea>
+          </label>
+          <div class="row">
+            <label>이미지 모델
+              <select id="image_model"></select>
+            </label>
+            <label>시드 <small>(빈칸/random = 랜덤)</small>
+              <input id="image_seed" type="text" />
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>출력 / 영상</legend>
+          <div class="row">
+            <label>종횡비
+              <select id="aspect"></select>
+            </label>
+            <label>base_width <small>(3060: 832~1024)</small>
+              <input id="base_width" type="number" min="256" max="1536" step="8" />
+            </label>
+          </div>
+          <label>Wan 모델
+            <select id="model_id"></select>
+          </label>
+          <label>GGUF 양자화 <small>(VRAM 절감, bf16 대비 ~1/3)</small>
+            <select id="gguf_quant"></select>
+          </label>
+          <label>모션 프롬프트 <small>(영어, 비우면 Gemini/기본값)</small>
+            <textarea id="motion_prompt" rows="2"></textarea>
+          </label>
+          <div class="row">
+            <label>프레임 수
+              <input id="video_length_frames" type="number" min="9" max="121" />
+            </label>
+            <label>FPS
+              <input id="video_fps" type="number" min="8" max="32" />
+            </label>
+            <label>추론 스텝
+              <input id="video_steps" type="number" min="1" max="60" />
+            </label>
+            <label>guidance
+              <input id="guidance_scale" type="number" min="0" max="20" step="0.1" />
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>후처리</legend>
+          <div class="row">
+            <label>보간 목표 FPS
+              <input id="interpolate_to_fps" type="number" min="8" max="120" />
+            </label>
+            <label>업스케일 배수
+              <select id="upscale_factor">
+                <option value="2">2x</option>
+                <option value="3">3x</option>
+                <option value="4">4x</option>
+              </select>
+            </label>
+          </div>
+          <div class="row checks">
+            <label class="check"><input id="use_rife" type="checkbox" /> RIFE 보간 사용</label>
+            <label class="check"><input id="upscale_video" type="checkbox" /> 영상 업스케일(WSL 불안정)</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>색보정 / 오디오</legend>
+          <div class="row">
+            <label>대비(contrast)
+              <input id="contrast" type="number" step="0.01" />
+            </label>
+            <label>채도(saturation)
+              <input id="saturation" type="number" step="0.01" />
+            </label>
+            <label>밝기(brightness)
+              <input id="brightness" type="number" step="0.01" />
+            </label>
+          </div>
+          <label>BGM 파일 <small>(선택)</small>
+            <input id="bgm" type="file" accept="audio/*" />
+          </label>
+        </fieldset>
+
+        <button type="submit" id="submit-btn">▶ 생성 시작</button>
+        <p class="hint">⚠️ GPU로 수 분 걸립니다. 잡은 GPU 1개라 순차 처리됩니다.</p>
+      </form>
+    </section>
+
+    <!-- ===== 진행 상황 / 결과 ===== -->
+    <section class="card" id="status-card" hidden>
+      <h2>진행 상황 <span id="job-id" class="muted"></span></h2>
+      <ol id="stages"></ol>
+      <div id="result" hidden>
+        <h3>결과</h3>
+        <video id="result-video" controls></video>
+        <p><a id="download-link" href="#" download>⬇ final.mp4 다운로드</a></p>
+      </div>
+      <details id="log-box">
+        <summary>로그</summary>
+        <pre id="log"></pre>
+      </details>
+      <p id="error" class="error" hidden></p>
+    </section>
+
+    <!-- ===== 최근 잡 ===== -->
+    <section class="card">
+      <h2>최근 잡</h2>
+      <ul id="job-list" class="job-list"></ul>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
